@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cs343s26 Projects</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg:             #0c0e14;
+      --surface:        #13161e;
+      --surface-hover:  #1a1e2a;
+      --border:         rgba(255, 255, 255, 0.07);
+      --border-hover:   rgba(169, 109, 211, 0.45);
+      --accent:         #a96dd3;
+      --accent-glow:    rgba(169, 109, 211, 0.08);
+      --text-primary:   #eef0f8;
+      --text-secondary: #d4c47e;
+      --text-muted:     #cbd0e0;
+      --text-dim:       rgba(255, 255, 255, 0.04);
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 4rem 2rem 5rem;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+
+    header {
+      max-width: 1140px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .eyebrow {
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.04;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+    }
+
+    .header-rule {
+      width: 2.5rem;
+      height: 2px;
+      background: var(--accent);
+      opacity: 0.55;
+      margin-bottom: 1.25rem;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      letter-spacing: 0.01em;
+    }
+
+    /* ── Grid ────────────────────────────────────────── */
+
+    .grid {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.9rem;
+    }
+
+    /* ── Card ────────────────────────────────────────── */
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-decoration: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem 1.3rem 1.2rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 190px;
+      transition:
+        border-color 0.22s ease,
+        background   0.22s ease,
+        transform    0.22s ease;
+    }
+
+    /* Subtle top-left glow that reveals on hover */
+    .card::after {
+      content: '';
+      position: absolute;
+      top: -30px;
+      left: -30px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+      background: var(--surface-hover);
+      transform: translateY(-4px);
+    }
+
+    .card:hover::after {
+      opacity: 1;
+    }
+
+    /* Watermark number in the background */
+    .card-watermark {
+      font-family: 'Syne', sans-serif;
+      font-size: 5.5rem;
+      font-weight: 800;
+      color: var(--text-dim);
+      line-height: 1;
+      position: absolute;
+      bottom: -0.5rem;
+      right: 0.75rem;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .team-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    /* Arrow icon — hidden until hover */
+    .card-arrow {
+      font-size: 0.85rem;
+      color: var(--accent);
+      opacity: 0;
+      transform: translate(-3px, 3px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      line-height: 1;
+    }
+
+    .card:hover .card-arrow {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+
+    .card-bottom {
+      position: relative;
+      z-index: 1;
+    }
+
+    .app-title {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* ── Responsive breakpoints ─────────────────────── */
+
+    @media (max-width: 960px) {
+      .grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 620px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      body  { padding: 2.5rem 1.25rem 4rem; }
+    }
+
+    @media (max-width: 380px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <p class="eyebrow">James Madison University &middot; CS 343 &middot; Spring 2026</p>
+    <h1>Final Projects</h1>
+    <div class="header-rule"></div>
+    <p class="subtitle">Student team projects &mdash; client-side web applications.</p>
+  </header>
+
+  <main class="grid">
+
+    <a class="card" href="https://cs343s26.github.io/team01/">
+      <div class="card-top">
+        <span class="team-label">Team 01</span>
+        <span class="card-arrow">&#8599;</span>
+      </div>
+      <div class="card-bottom">
+        <p class="app-title">Pattern Pantry</p>
+      </div>
+      <span class="card-watermark" aria-hidden="true">01</span>
+    </a>
+
+    <a class="card" href="https://cs343s26.github.io/team02/">
+      <div class="card-top">
+        <span class="team-label">Team 02</span>
+        <span class="card-arrow">&#8599;</span>
+      </div>
+      <div class="card-bottom">
+        <p class="app-title">Dukes Casino</p>
+      </div>
+      <span class="card-watermark" aria-hidden="true">02</span>
+    </a>
+
+    <a class="card" href="https://cs343s26.github.io/team03/">
+      <div class="card-top">
+        <span class="team-label">Team 03</span>
+        <span class="card-arrow">&#8599;</span>
+      </div>
+      <div class="card-bottom">
+        <p class="app-title">GuideRail</p>
+      </div>
+      <span class="card-watermark" aria-hidden="true">03</span>
+    </a>
+
+    <a class="card" href="https://cs343s26.github.io/team04/">
+      <div class="card-top">
+        <span class="team-label">Team 04</span>
+        <span class="card-arrow">&#8599;</span>
+      </div>
+      <div class="card-bottom">
+        <p class="app-title">Task Hero</p>
+      </div>
+      <span class="card-watermark" aria-hidden="true">04</span>
+    </a>
+
+    <a class="card" href="https://cs343s26.github.io/team05/">
+      <div class="card-top">
+        <span class="team-label">Team 05</span>
+        <span class="card-arrow">&#8599;</span>
+      </div>
+      <div class="card-bottom">
+        <p class="app-title">Xscape</p>
+      </div>
+      <span class="card-watermark" aria-hidden="true">05</span>
+    </a>
+
+    <a class="card" href="https://cs343s26.github.io/team06/">
+      <div class="card-top">
+        <span class="team-label">Team 06</span>
+        <span class="card-arrow">&#8599;</span>
+      </div>
+      <div class="card-bottom">
+        <p class="app-title">Trail Tracker</p>
+      </div>
+      <span class="card-watermark" aria-hidden="true">06</span>
+    </a>
+
+    <a class="card" href="https://cs343s26.github.io/team07/">
+      <div class="card-top">
+        <span class="team-label">Team 07</span>
+        <span class="card-arrow">&#8599;</span>
+      </div>
+      <div class="card-bottom">
+        <p class="app-title">Crate</p>
+      </div>
+      <span class="card-watermark" aria-hidden="true">07</span>
+    </a>
+
+    <a class="card" href="https://cs343s26.github.io/team08/">
+      <div class="card-top">
+        <span class="team-label">Team 08</span>
+        <span class="card-arrow">&#8599;</span>
+      </div>
+      <div class="card-bottom">
+        <p class="app-title">Tradar</p>
+      </div>
+      <span class="card-watermark" aria-hidden="true">08</span>
+    </a>
+
+    <a class="card" href="https://cs343s26.github.io/team09/">
+      <div class="card-top">
+        <span class="team-label">Team 09</span>
+        <span class="card-arrow">&#8599;</span>
+      </div>
+      <div class="card-bottom">
+        <p class="app-title">Battle Through the Ages</p>
+      </div>
+      <span class="card-watermark" aria-hidden="true">09</span>
+    </a>
+
+    <a class="card" href="https://cs343s26.github.io/team10/">
+      <div class="card-top">
+        <span class="team-label">Team 10</span>
+        <span class="card-arrow">&#8599;</span>
+      </div>
+      <div class="card-bottom">
+        <p class="app-title">Lock-In Duke</p>
+      </div>
+      <span class="card-watermark" aria-hidden="true">10</span>
+    </a>
+
+    <a class="card" href="https://cs343s26.github.io/team11/">
+      <div class="card-top">
+        <span class="team-label">Team 11</span>
+        <span class="card-arrow">&#8599;</span>
+      </div>
+      <div class="card-bottom">
+        <p class="app-title">MedSafe</p>
+      </div>
+      <span class="card-watermark" aria-hidden="true">11</span>
+    </a>
+
+    <a class="card" href="https://cs343s26.github.io/team12/">
+      <div class="card-top">
+        <span class="team-label">Team 12</span>
+        <span class="card-arrow">&#8599;</span>
+      </div>
+      <div class="card-bottom">
+        <p class="app-title">Doodle Detect</p>
+      </div>
+      <span class="card-watermark" aria-hidden="true">12</span>
+    </a>
+
+    <a class="card" href="https://cs343s26.github.io/team13/">
+      <div class="card-top">
+        <span class="team-label">Team 13</span>
+        <span class="card-arrow">&#8599;</span>
+      </div>
+      <div class="card-bottom">
+        <p class="app-title">Gridiron Compare</p>
+      </div>
+      <span class="card-watermark" aria-hidden="true">13</span>
+    </a>
+
+  </main>
+
+</body>
+</html>
