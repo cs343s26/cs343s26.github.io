@@ -1,0 +1,11 @@
+# backup files
+*~
+*.bak
+config.js
+
+# macOS metadata
+.DS_Store
+._*
+
+# test files
+*-test*
